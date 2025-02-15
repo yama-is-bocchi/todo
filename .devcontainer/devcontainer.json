@@ -1,0 +1,17 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.160.0/containers/ubuntu
+{
+    "name": "${localWorkspaceFolderBasename}",
+    "image": "mcr.microsoft.com/vscode/devcontainers/go:1.23-bookworm",
+    "remoteUser": "vscode",
+    "updateRemoteUserUID": true,
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.go",
+                "streetsidesoftware.code-spell-checker"
+            ],
+            "settings": {}
+        }
+    }
+}
