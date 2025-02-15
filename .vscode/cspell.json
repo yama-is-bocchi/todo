@@ -9,10 +9,14 @@
         "**/go.mod",
         "**/go.sum",
         "**/vendor/**",
-        "**/.golangci.yaml"
+        "**/.golangci.yaml",
+        "**/*.sqlite",
     ],
     "words": [
         "devcontainer",
-        "bocchi"
+        "bocchi",
+        "thamaji",
+        "mattn",
+        "termbox"
     ]
 }
