@@ -17,6 +17,7 @@
         "bocchi",
         "thamaji",
         "mattn",
-        "termbox"
+        "termbox",
+        "AUTOINCREMENT"
     ]
 }

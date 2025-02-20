@@ -11,7 +11,11 @@ import (
 )
 
 func main() {
-	app := app.New(database.NewSQLiteDB("db.sqlite"), ui.NewUI(termbox.ColorGreen, termbox.ColorBlack), ui.NewEventHandler())
+	db, err := database.NewSQLiteDB("db.sqlite")
+	if err != nil {
+		log.Fatal(err)
+	}
+	app := app.New(db, ui.NewUI(termbox.ColorGreen, termbox.ColorBlack), ui.NewEventHandler())
 	if err := app.Run(); err != nil {
 		log.Fatal(err)
 	}
