@@ -13,3 +13,9 @@ type TodoData struct {
 	createdDate     date.Date
 	lastUpdatedDate date.Date
 }
+// 作成されたTODOデータ
+type CreatedData struct {
+	Title string
+	Desc  string
+	Date  date.Date
+}

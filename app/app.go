@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nsf/termbox-go"
+	"github.com/yama-is-bocchi/todo/app/internal/input_parser"
 	"github.com/yama-is-bocchi/todo/app/internal/key_detection"
 	"github.com/yama-is-bocchi/todo/app/internal/screen"
 	"github.com/yama-is-bocchi/todo/database"
@@ -41,7 +42,13 @@ func (app *mainApplication) Run() error {
 				return fmt.Errorf("failed to print scan menu:%w", err)
 			}
 			// 入力画面に対するinputsの処理分け
-			fmt.Println(inputs)
+			createdData, err := input_parser.ParseCreatedData(inputs)
+			if err != nil {
+				app.ui.Render(app.ui.GenerateFont(fmt.Sprintf("failed to print scan menu:%s", err.Error()))...)
+			}
+			if err := app.appDatabase.Create(createdData); err != nil {
+				return fmt.Errorf("failed to create todo data at sqlite:%w", err)
+			}
 			app.screenState = screen.MENU
 		}
 		if app.screenState == screen.QUIT {

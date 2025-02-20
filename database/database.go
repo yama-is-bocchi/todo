@@ -2,10 +2,10 @@ package database
 
 // データベースインターフェース
 type DBInterface interface {
-	create(TodoData) error
-	read() ([]TodoData, error)
-	update(TodoData) error
-	delete(TodoData) error
+	Create(CreatedData) error
+	Read() ([]TodoData, error)
+	Update(TodoData) error
+	Delete(TodoData) error
 }
 
 // SQLiteを用いたデータベース
@@ -19,21 +19,21 @@ func NewSQLiteDB(filePath string) *sqliteDatabase {
 }
 
 // SQLiteにTodoデータ書き込み
-func (sqlite *sqliteDatabase) create(targetData TodoData) error {
+func (sqlite *sqliteDatabase) Create(targetData CreatedData) error {
 	return nil
 }
 
 // SQLiteからTodoデータ読み込み
-func (sqlite *sqliteDatabase) read() ([]TodoData, error) {
+func (sqlite *sqliteDatabase) Read() ([]TodoData, error) {
 	return nil, nil
 }
 
 // SQLiteのTodoデータ更新
-func (sqlite *sqliteDatabase) update(targetData TodoData) error {
+func (sqlite *sqliteDatabase) Update(targetData TodoData) error {
 	return nil
 }
 
 // SQLiteのTodoデータ削除
-func (sqlite *sqliteDatabase) delete(targetData TodoData) error {
+func (sqlite *sqliteDatabase) Delete(targetData TodoData) error {
 	return nil
 }
