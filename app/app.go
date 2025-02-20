@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/nsf/termbox-go"
 	"github.com/yama-is-bocchi/todo/app/internal/input_parser"
@@ -30,7 +31,7 @@ func (app *mainApplication) Run() error {
 	println("running...")
 	for {
 		switch app.screenState {
-		case screen.MENU, screen.LIST:
+		case screen.MENU:
 			state, err := app.printSelectMenu(screen.GetLines(app.screenState)...)
 			if err != nil {
 				return fmt.Errorf("failed to print select menu:%w", err)
@@ -50,6 +51,22 @@ func (app *mainApplication) Run() error {
 				return fmt.Errorf("failed to create todo data at sqlite:%w", err)
 			}
 			app.screenState = screen.MENU
+		case screen.LIST:
+			todos, err := app.appDatabase.Read()
+			if err != nil {
+				return fmt.Errorf("failed to read database:%w", err)
+			}
+			var lines []string
+			for _, todo := range todos {
+				for _, line := range strings.Split(todo.String(), "\n") {
+					lines = append(lines, line)
+				}
+			}
+			state, err := app.printSelectMenu(lines...)
+			if err != nil {
+				return fmt.Errorf("failed to create todo data at sqlite:%w", err)
+			}
+			app.screenState = state
 		}
 		if app.screenState == screen.QUIT {
 			break

@@ -3,6 +3,10 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"time"
+
+	"github.com/thamaji/date"
 )
 
 // データベースインターフェース
@@ -42,7 +46,6 @@ func NewSQLiteDB(filePath string) (*sqliteDatabase, error) {
 
 // SQLiteにTodoデータ書き込み
 func (sqlite *sqliteDatabase) Create(targetData CreatedData) error {
-	// データベースに接続 (なければ作成)
 	db, err := sql.Open("sqlite3", sqlite.filePath)
 	if err != nil {
 		return fmt.Errorf("failed to open sqlite3:%w", err)
@@ -58,7 +61,65 @@ func (sqlite *sqliteDatabase) Create(targetData CreatedData) error {
 
 // SQLiteからTodoデータ読み込み
 func (sqlite *sqliteDatabase) Read() ([]TodoData, error) {
-	return nil, nil
+	db, err := sql.Open("sqlite3", sqlite.filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open sqlite3: %w", err)
+	}
+	defer db.Close()
+
+	query := `SELECT serialNumber, title, description, limitDate, createdDate, lastUpdatedDate FROM todos`
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var todos []TodoData
+
+	for rows.Next() {
+		var todo TodoData
+		var limitDateStr, createdDateStr, lastUpdatedDateStr string
+
+		err := rows.Scan(
+			&todo.serialNumber, &todo.title, &todo.description,
+			&limitDateStr, &createdDateStr, &lastUpdatedDateStr,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if limitDateStr != "" {
+			t, err := time.Parse("2006-01-02", limitDateStr)
+			if err != nil {
+				log.Println("warning: failed to parse limitDate:", err)
+			} else {
+				todo.limitDate = date.FromTime(t)
+			}
+		}
+
+		if createdDateStr != "" {
+			t, err := time.Parse("2006-01-02 15:04:05", createdDateStr)
+			if err != nil {
+				log.Println("warning: failed to parse createdDate:", err)
+			} else {
+				todo.createdDate = date.FromTime(t)
+			}
+		}
+
+		if lastUpdatedDateStr != "" {
+			t, err := time.Parse("2006-01-02 15:04:05", lastUpdatedDateStr)
+			if err != nil {
+				log.Println("warning: failed to parse lastUpdatedDate:", err)
+			} else {
+				todo.lastUpdatedDate = date.FromTime(t)
+			}
+		}
+
+		todos = append(todos, todo)
+	}
+
+	return todos, nil
+
 }
 
 // SQLiteのTodoデータ更新

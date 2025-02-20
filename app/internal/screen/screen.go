@@ -24,6 +24,8 @@ func GetNextState(currentLine int, currentState ScreenState) ScreenState {
 		case 3:
 			return DELETE
 		}
+	case LIST:
+		return MENU
 	}
 	return MENU
 }
